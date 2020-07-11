@@ -1,0 +1,35 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+
+  tasks:
+    - name: create developer ec2 instance
+      ec2:
+        image: ami-016b213e65284e9c9
+        instance_type: t3.small
+        key_name: corkSecV.1
+        # network_interfaces:
+        #   - device_index: 0
+        #     associate_public_ip_address: yes
+        #     groups:
+        #       - "{{ develsg.group_id }}"
+        #       - "{{ servsg.group_id }}"
+        group_id:
+          - "{{ develsg.group_id }}" 
+          - "{{ servsg.group_id }}"
+        assign_public_ip: yes
+        instance_tags:
+          Name: ec2-developer-instance
+        wait: yes
+        user_data: "{{ lookup('file', './ec2_scripts/ec2_developer_main.sh') | b64encode }}"
+        monitoring: yes
+        vpc_subnet_id: "{{ pubis1.subnet.id }}"
+        count_tag: 
+          Name: ec2-developer-instance
+        exact_count: 1
+#  - "{{ ig_postgres_tag_sg.group_id }}"
+

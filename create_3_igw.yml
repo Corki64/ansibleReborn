@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  # create global modifiers
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+  tasks:
+    - name: create IGW
+      ec2_vpc_igw:
+        vpc_id: "{{ vpc.vpc.id }}"
+        tags:
+          Name: lcortez-igw
+        state: present
+      register: igw

@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  # create global modifiers
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+  tasks:
+      - name: create public route table
+        ec2_vpc_route_table:
+          vpc_id: "{{ vpc.vpc.id }}"
+          tags:
+            Name: lcortez-public-route-table
+          subnets:
+            - "{{ pubis1.subnet.id }}"
+            - "{{ pubis2.subnet.id }}"
+            - "{{ pubis3.subnet.id }}"
+          routes:
+            - dest: 10.64.0.0/16
+              gateway_id: local
+            - dest: 0.0.0.0/0
+              gateway_id: "{{ igw.gateway_id }}"
+          state: present
+        register: pubisRT

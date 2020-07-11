@@ -1,0 +1,29 @@
+# - name: debug
+#   debug: var=igw
+---
+- hosts: localhost
+  gather_facts: no
+
+  # create global modifiers
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+  tasks:
+    # server security group
+    - name: create server security group
+      ec2_group:
+        name: lcortez-server-sg
+        tags:
+          Name: lcortez-server-sg
+        description: public server sg for apache
+        vpc_id: "{{ vpc.vpc.id }}"
+        rules:
+          - proto: tcp
+            ports:
+              - 22
+              - 80
+              - 443
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allows all traffic ssh - http - https
+        state: present
+      register: servsg

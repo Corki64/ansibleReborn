@@ -1,0 +1,12 @@
+---
+# initial vps setup :: todo rds
+- import_playbook: create_1_vpc.yml
+- import_playbook: create_2_publicSubnet.yml
+- import_playbook: create_3_igw.yml
+# - import_playbook: create_4_nat.yml
+# route tables and security groups :: todo acls
+- import_playbook: create_5_pubRouteTable.yml
+- import_playbook: create_6_servsg.yml
+- import_playbook: create_7_develsg.yml
+# instance setup :: todo launch ec2_launch_template
+- import_playbook: create_8_ec2_developer.yml

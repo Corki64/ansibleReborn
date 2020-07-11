@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  # create global modifiers
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+  tasks:
+    - name: create NAT
+      ec2_vpc_nat_gateway:
+        subnet_id: "{{ pubis1.subnet.id }}"
+        wait: yes
+        if_exist_do_not_create: true
+        state: present
+      register: nat

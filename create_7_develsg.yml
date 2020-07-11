@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+
+  tasks:
+    - name: create developement security group
+      ec2_group:
+        name: lcortez-development-sg
+        tags:
+          Name: lcortez-development-sg
+        description: lcortez devel security group
+        vpc_id: "{{ vpc.vpc.id }}"
+        rules:
+          - proto: tcp
+            ports:
+              - 22
+              - 80
+              - 443
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allows all traffic ssh - http - https
+          - proto: tcp
+            ports:
+              - 5000
+            cidr_ip: 173.21.91.30/32
+            rule_desc: allows port 5000 access by developer home ip all tcp traffic
+        state: present
+      register: develsg

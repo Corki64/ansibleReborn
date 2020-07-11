@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  # create global modifiers
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+  tasks:
+    #create vpc
+    - name: create VPC
+      ec2_vpc_net:
+        name: lcortez-vpc
+        cidr_block: 10.64.0.0/16
+        tags:
+          Module: 5
+          Name: lcortez-vpc
+        state: present
+      register: vpc
